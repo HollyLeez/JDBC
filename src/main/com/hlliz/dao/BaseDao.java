@@ -1,6 +1,8 @@
 package main.com.hlliz.dao;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,7 +16,16 @@ import main.com.hlliz.utils.JDBCUtils;
 /**
  * 封装了针对于数据表的通用操作
  */
-public abstract class BaseDao {
+public abstract class BaseDao<T> {
+
+    private Class<T> clazz = null;
+    //获取当前BaseDao的子类继承父类中的泛型
+    {
+        Type genericSuperclass = this.getClass().getGenericSuperclass();//this代表创建的子类对象
+        ParameterizedType paramType = (ParameterizedType) genericSuperclass;
+        Type[] typeArguments = paramType.getActualTypeArguments();//获取父类泛型参数
+        clazz = (Class<T>) typeArguments[0];//泛型的第一个参数
+    }
     /**
      * 通用增删改操作2.0（考虑事务）
      */
@@ -42,7 +53,7 @@ public abstract class BaseDao {
      * 通用查询
      * @return list
      */
-    public <T> List<T> getInstance(Connection conn, Class<T> clazz, String sql, Object ...args){
+    public List<T> getInstance(Connection conn, String sql, Object ...args){
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {

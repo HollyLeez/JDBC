@@ -1,5 +1,7 @@
 package main.com.hlliz.dao.impl;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.Date;
 import java.util.List;
@@ -8,15 +10,16 @@ import main.com.hlliz.bean.Customer;
 import main.com.hlliz.dao.BaseDao;
 import main.com.hlliz.dao.CustomersDao;
 
-public class CustomerDaoImpl extends BaseDao implements CustomersDao {
+public class CustomerDaoImpl extends BaseDao<Customer> implements CustomersDao {
+
     @Override
     public int update(Connection conn, String sql, Object... agrs) {
         return super.update(conn, sql, agrs);
     }
 
     @Override
-    public <T> List<T> getInstance(Connection conn, Class<T> clazz, String sql, Object... args) {
-        return super.getInstance(conn, clazz, sql, args);
+    public List<Customer> getInstance(Connection conn, String sql, Object ...args){
+        return super.getInstance(conn, sql, args);
     }
 
     @Override
@@ -45,7 +48,7 @@ public class CustomerDaoImpl extends BaseDao implements CustomersDao {
     @Override
     public Customer getCustomerById(Connection conn, int id) {
         String sql="select id,name,email,birth from customers where id=?";
-        List<Customer> list = super.getInstance(conn, Customer.class, sql, id);
+        List<Customer> list = super.getInstance(conn, sql, id);
         if(list!=null && !list.isEmpty()){
             return list.get(0);
         }
