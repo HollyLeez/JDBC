@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.sql.*;
 import java.util.Properties;
 
+import org.apache.commons.dbutils.DbUtils;
+
 /**
  * 操作数据库的工具类
  */
@@ -74,6 +76,24 @@ public class JDBCUtils {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    /**
+     * 使用dbUtils jar包中的DbUtils工具类关闭连接
+     * @param conn
+     * @param ps
+     */
+    public static void closeResources1(Connection conn, Statement ps){
+        try {
+            DbUtils.close(conn);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try {
+            DbUtils.close(ps);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }
